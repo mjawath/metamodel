@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft/#",
+  "title": "Customer Schema",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string", "required": true },
+    "email": { "type": "string", "format": "email" }
+  },
+  "required": ["name"]
+}

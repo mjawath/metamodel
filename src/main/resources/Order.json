@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "Product": {
+      "title": "Product Schema",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "required": true }
+      },
+      "required": ["name"]
+    },
+    "Customer": {
+      "title": "Customer Schema",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "required": true },
+        "email": { "type": "string", "format": "email" }
+      },
+      "required": ["name"]
+    },
+    "OrderItem": {
+      "title": "Order Item Schema",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "required": true },
+        "quantity": { "type": "integer", "minimum": 1 },
+        "price": { "type": "number" }
+      },
+      "required": ["productId", "quantity"]
+    },
+    "Order": {
+      "title": "Order Schema",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "orderDate": { "type": "string", "format": "date" },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/OrderItem" }
+        },
+        "total": { "type": "number" }
+      },
+      "required": ["orderDate", "items"]
+    }
+  }
+}

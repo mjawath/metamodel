@@ -1,0 +1,29 @@
+{
+  "Object": "Person",
+  "Attributes": {
+    "id": {"type": "integer", "primaryKey": true},
+    "name": {"type": "string"},
+    "age": {"type": "integer"},
+    "address": {"type": "string"}
+  },
+  "relationships": {
+    "oneToMany": [
+      {
+        "name": "friends",
+        "relatedObject": "Person",
+        "foreignKey": "personId"
+      }
+    ]
+  },
+  "databaseMapping": {
+    "tableName": "people",
+    "schema": {
+      "id": "INT PRIMARY KEY AUTO_INCREMENT",
+      "name": "VARCHAR(255)",
+      "age": "INT",
+      "address": "VARCHAR(255)"
+    }
+  }
+
+}
+

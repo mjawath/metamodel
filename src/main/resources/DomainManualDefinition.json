@@ -1,0 +1,46 @@
+{
+  "objects": {
+    "customer": {
+      "title": "Customer",
+      "description": "An object representing a customer",
+      "type": "object",
+      "class": "com.mycompany.metamodel.Customer",
+        "tableName": "people"
+      },
+      "operation": "create",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "columnName": "id",
+          "columnType": "integer",
+          "primaryKey": true,
+          "required": true,
+          "autoIncrement": true,
+          "columnSize": 10
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "columnName": "name",
+          "columnType": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "required": true,
+          "columnName": "email",
+          "columnType": "string"
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/contact"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}
