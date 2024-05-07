@@ -1,6 +1,8 @@
 package com.mycompany.metamodel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networknt.schema.JsonSchema;
@@ -52,6 +54,18 @@ public class ReadFile {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readTree(input);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T readToObject(String input,String objectPath, TypeReference<T> trf)  {
+        JsonNode jsonNode = readJsonFile(input);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        try {
+            return objectMapper.readValue(jsonNode.get(objectPath).toString(),trf);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

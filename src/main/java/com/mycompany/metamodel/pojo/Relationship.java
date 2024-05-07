@@ -1,6 +1,9 @@
-package com.mycompany.metamodel;
+package com.mycompany.metamodel.pojo;
 
-class Relationship {
+import lombok.Data;
+
+@Data
+public class Relationship {
     private String targetEntity;
     private String cardinality;
     private String mappedBy;
