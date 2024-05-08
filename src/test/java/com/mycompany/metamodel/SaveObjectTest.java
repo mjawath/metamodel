@@ -1,11 +1,13 @@
 package com.mycompany.metamodel;
 
+import com.mycompany.metamodel.testdomain.Customer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 public class SaveObjectTest {
@@ -18,7 +20,8 @@ public class SaveObjectTest {
 
     @Test
     public void test(){
-        baseDAO.save(null);
+        Map customer = ReadFile.readToAnMap("/Customers.json", "customer");
+        baseDAO.save(customer);
         Assertions.assertNotNull("test");
     }
 }

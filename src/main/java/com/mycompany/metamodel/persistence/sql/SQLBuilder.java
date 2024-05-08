@@ -1,6 +1,7 @@
 package com.mycompany.metamodel.persistence.sql;
 
 import com.mycompany.metamodel.persistence.PersistenceBuilder;
+import com.mycompany.metamodel.pojo.BuilderResult;
 import com.mycompany.metamodel.pojo.DomainModel;
 import com.mycompany.metamodel.pojo.ObjectDefinition;
 import com.mycompany.metamodel.pojo.PropertyDefinition;
@@ -10,7 +11,7 @@ import java.util.Map;
 public class SQLBuilder extends PersistenceBuilder {
 
 
-    public Object build(Map<String, ObjectDefinition> objectDefinitionMap) {
+    public BuilderResult build(Map<String, ObjectDefinition> objectDefinitionMap) {
         DomainModel domainModel = DomainModel.getInstance();
         objectDefinitionMap.entrySet().forEach(entry -> {
             StringBuilder sql = new StringBuilder();
@@ -35,6 +36,6 @@ public class SQLBuilder extends PersistenceBuilder {
             sql.toString();
 
         });
-        return domainModel;
+        return null;
       }
 }

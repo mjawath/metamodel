@@ -1,13 +1,16 @@
 package com.mycompany.metamodel.persistence.sql;
 
 import com.mycompany.metamodel.persistence.PersistenceRunner;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class JDBCRunner extends PersistenceRunner {
 
-//    private NamedParameterJdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate template;
 
 
     public void save(Object object) {
+//        template.execute("select * from customer");
+
         // Implement save logic using NamedParameterJdbcTemplate
         // You would generate the insert SQL statement using a SqlBuilder or directly
         // and then execute it with NamedParameterJdbcTemplate

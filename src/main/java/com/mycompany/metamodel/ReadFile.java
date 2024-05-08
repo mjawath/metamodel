@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 
 public class ReadFile {
 
@@ -66,6 +67,29 @@ public class ReadFile {
 
         try {
             return objectMapper.readValue(jsonNode.get(objectPath).toString(),trf);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T readToAnObject(String input,String objectPath, Class<T> trf)  {
+        JsonNode jsonNode = readJsonFile(input);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        try {
+            return objectMapper.readValue(jsonNode.toString(),trf);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static Map readToAnMap(String input,String objectPath)  {
+        JsonNode jsonNode = readJsonFile(input);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        try {
+            return objectMapper.readValue(jsonNode.toString(), Map.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

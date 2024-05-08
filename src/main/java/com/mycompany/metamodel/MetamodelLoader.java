@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mycompany.metamodel.pojo.DomainModel;
 import com.mycompany.metamodel.pojo.ObjectDefinition;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -21,5 +22,9 @@ public class MetamodelLoader {
         };
         Map<String, ObjectDefinition> definitionMap = ReadFile.readToObject("/DomainManualDefinition.json", "objects", objects);
         DomainModel.getInstance().setObjects(definitionMap);
+    }
+    @PostConstruct
+    public void loadPost(){
+        load();
     }
 }
