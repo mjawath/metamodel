@@ -4,7 +4,9 @@ import lombok.Data;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 @Data
-public class BuilderResult {
-    private Map<String, Object> sqlMap=new LinkedHashMap<>();
+public class PersistenceResult {
+
+    private Map<String, Object> resultForTable = new LinkedHashMap<>();
 }

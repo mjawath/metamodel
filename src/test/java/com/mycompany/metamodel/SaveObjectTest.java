@@ -20,8 +20,16 @@ public class SaveObjectTest {
 
     @Test
     public void test(){
-        Map customer = ReadFile.readToAnMap("/Customers.json", "customer");
+        Map customer = ReadFile.readToAnMap("/Customers.json");
         baseDAO.save(customer);
+        Assertions.assertNotNull("test");
+    }
+
+
+    @Test
+    public void testmulti(){
+        Map customer = ReadFile.readToAnMap("/Multi.json");
+        baseDAO.saveM(customer);
         Assertions.assertNotNull("test");
     }
 }

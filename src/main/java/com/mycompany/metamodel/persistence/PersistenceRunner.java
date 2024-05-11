@@ -1,5 +1,9 @@
 package com.mycompany.metamodel.persistence;
 
-public class PersistenceRunner {
+import com.mycompany.metamodel.pojo.BuilderResult;
+import com.mycompany.metamodel.pojo.PersistenceResult;
+
+public interface PersistenceRunner {
+    public PersistenceResult insert(BuilderResult object);
 
 }

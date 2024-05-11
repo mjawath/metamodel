@@ -5,7 +5,7 @@
       "description": "An object representing a customer",
       "type": "object",
       "class": "com.mycompany.metamodel.Customer",
-      "tableName": "people",
+      "tableName": "customer",
       "operation": "create",
       "properties": {
         "id": {

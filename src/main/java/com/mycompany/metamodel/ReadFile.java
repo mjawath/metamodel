@@ -83,7 +83,7 @@ public class ReadFile {
             throw new RuntimeException(e);
         }
     }
-    public static Map readToAnMap(String input,String objectPath)  {
+    public static Map readToAnMap(String input)  {
         JsonNode jsonNode = readJsonFile(input);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
