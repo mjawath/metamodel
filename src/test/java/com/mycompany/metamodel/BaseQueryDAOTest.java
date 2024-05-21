@@ -1,20 +1,20 @@
 package com.mycompany.metamodel;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-class BaseDAOTest {
+class BaseQueryDAOTest {
+
+    @Autowired
+    private BaseQueryDAO baseQueryDAO;
 
 
     @Test
     public void queryAll(){
-
+        baseQueryDAO.getObjectById("customer", 1);
     }
 
 }

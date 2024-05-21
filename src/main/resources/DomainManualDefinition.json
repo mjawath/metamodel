@@ -6,6 +6,7 @@
       "type": "object",
       "class": "com.mycompany.metamodel.Customer",
       "tableName": "customer",
+      "entityName": "customer",
       "operation": "create",
       "properties": {
         "id": {

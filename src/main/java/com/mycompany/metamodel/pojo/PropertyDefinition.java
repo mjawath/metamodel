@@ -17,6 +17,10 @@ public class PropertyDefinition extends Node {
     // Getters and setters for all properties
     // Implement as needed
 
+    public boolean isAttribute() {
+        return !"array".equalsIgnoreCase(type);
+    }
+
     //override clone
     @Override
     public PropertyDefinition clone() {

@@ -6,6 +6,7 @@
       "type": "object",
       "class": "com.mycompany.metamodel.Customer",
       "tableName": "customer",
+      "entityName": "customer",
       "operation": "create",
       "properties": {
         "id": {
@@ -47,6 +48,7 @@
       "type": "object",
       "class": "com.mycompany.metamodel.User",
       "tableName": "user_detail",
+      "entityName": "user",
       "operation": "create",
       "properties": {
         "id": {

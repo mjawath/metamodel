@@ -3,7 +3,6 @@ package com.mycompany.metamodel.pojo.sql;
 import lombok.Data;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 // Abstract class for SQL statement
 abstract class SQLStatement {
@@ -17,16 +16,6 @@ enum JoinType {
     LEFT_JOIN,
     RIGHT_JOIN,
     FULL_JOIN
-}
-
-@Data
-class JoinCondition {
-    private String leftTable;
-    private String leftColumn;
-    private String rightTable;
-    private String rightColumn;
-
-    // Constructor, getters, and setters
 }
 
 @Data
@@ -78,75 +67,3 @@ class SelectStatement extends SQLStatement {
     }
 }
 
-// Class for INSERT statement
-class InsertStatement extends SQLStatement {
-    private String tableName;
-    private List<String> insertColumns;
-    private List<List<Object>> insertValues;
-
-    // Constructor, getters, and setters
-
-    @Override
-    public String generateSQL() {
-        StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("INSERT INTO ")
-                  .append(tableName)
-                  .append(" (")
-                  .append(String.join(", ", insertColumns))
-                  .append(")\nVALUES ");
-        for (List<Object> row : insertValues) {
-            sqlBuilder.append("(")
-                      .append(String.join(", ", row.stream().map(Object::toString).collect(Collectors.toList())))
-                      .append("), ");
-        }
-        sqlBuilder.setLength(sqlBuilder.length() - 2); // Remove the last comma and space
-        return sqlBuilder.toString();
-    }
-}
-
-@Data
-class UpdateStatement extends SQLStatement {
-    private String tableName;
-    private Map<String, Object> setValues;
-    private List<String> whereConditions;
-
-    // Constructor, getters, and setters
-
-    @Override
-    public String generateSQL() {
-        StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("UPDATE ")
-                  .append(tableName)
-                  .append("\nSET ");
-        List<String> setClauses = new ArrayList<>();
-        for (Map.Entry<String, Object> entry : setValues.entrySet()) {
-            setClauses.add(entry.getKey() + " = " + entry.getValue());
-        }
-        sqlBuilder.append(String.join(", ", setClauses));
-        if (!whereConditions.isEmpty()) {
-            sqlBuilder.append("\nWHERE ")
-                      .append(String.join(" AND ", whereConditions));
-        }
-        return sqlBuilder.toString();
-    }
-}
-
-// Class for DELETE statement
-class DeleteStatement extends SQLStatement {
-    private String tableName;
-    private List<String> deleteConditions;
-
-    // Constructor, getters, and setters
-
-    @Override
-    public String generateSQL() {
-        StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("DELETE FROM ")
-                  .append(tableName);
-        if (!deleteConditions.isEmpty()) {
-            sqlBuilder.append("\nWHERE ")
-                      .append(String.join(" AND ", deleteConditions));
-        }
-        return sqlBuilder.toString();
-    }
-}

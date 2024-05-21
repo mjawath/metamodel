@@ -1,13 +1,16 @@
 package com.mycompany.metamodel.pojo.sql;
 
 import com.mycompany.metamodel.pojo.ObjectDefinition;
+import com.mycompany.metamodel.pojo.QueryBuilderResult;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -32,8 +35,25 @@ public class JOOQSql {
 //        this.dslContext = DSL.using(dataSource, SQLDialect.MYSQL); // Assuming MySQL
 //    }
 
-    public SelectQuery<?> buildSelect(String tableName) {
-        return dslContext.select().from(table(tableName)).getQuery();
+    public  QueryBuilderResult.BuilderResult buildSelect(ObjectDefinition objectDefinition) {
+        Map<String, Object> objectMap = new LinkedHashMap<>();
+        QueryBuilderResult.BuilderResult qbr =new QueryBuilderResult.BuilderResult();
+        qbr.setEntityName(objectDefinition.getEntityName());
+        Map<String, String> attributeByColumnName = new LinkedHashMap<>();
+        List<SelectField> selectFields = new ArrayList<>();
+        objectDefinition.getProperties().forEach((propName, value) -> {
+            if(value.isAttribute()){
+                selectFields.add(field(value.getColumnName()));
+                attributeByColumnName.put(value.getColumnName(),propName );
+            }
+        });
+
+        qbr.setAttributeByColumnName(attributeByColumnName);
+        qbr.setPropertyDefinition(objectDefinition.getProperties());
+        qbr.setQueryObject(dslContext.select(selectFields)
+                .from(table(objectDefinition.getTableName()))
+                .getQuery());
+        return qbr;
     }
 
     public Object buildInsert(ObjectDefinition objectDefinition) {

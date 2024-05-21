@@ -2,7 +2,10 @@ package com.mycompany.metamodel.pojo;
 
 import lombok.Data;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Data
 public class ObjectDefinition extends Node{
@@ -37,6 +40,12 @@ public class ObjectDefinition extends Node{
         clone.setProperties(this.properties);
         clone.setRequired(this.required);
         clone.setValue(this.value);
+        if(this.properties != null) {
+            clone.properties = new LinkedHashMap<>();
+            for(Map.Entry<String, PropertyDefinition> entry :  this.properties.entrySet()){
+                clone.properties.put(entry.getKey(), entry.getValue().clone());
+            }
+        }
         return clone;
     }
 }
