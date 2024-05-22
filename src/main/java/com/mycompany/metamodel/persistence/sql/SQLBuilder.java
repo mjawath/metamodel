@@ -5,17 +5,15 @@ import com.mycompany.metamodel.pojo.BuilderResult;
 import com.mycompany.metamodel.pojo.DomainModel;
 import com.mycompany.metamodel.pojo.ObjectDefinition;
 import com.mycompany.metamodel.pojo.PropertyDefinition;
+import com.mycompany.metamodel.pojo.sql.InsertStatement;
 import com.mycompany.metamodel.pojo.sql.JOOQSql;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class SQLBuilder implements PersistenceBuilder {
-    @Autowired
-    private JOOQSql sql;
 
     public BuilderResult build(Map<String, ObjectDefinition> objectDefinitionMap) {
         DomainModel domainModel = DomainModel.getInstance();
@@ -24,8 +22,25 @@ public class SQLBuilder implements PersistenceBuilder {
         domainModel.setObjects(objectDefinitionMap);
         objectDefinitionMap.entrySet().forEach(entry -> {
             ObjectDefinition objectDefinition = entry.getValue();
-            Object sqlx= sql.buildInsert( objectDefinition);
-            builderResult.getSqlMap().put(entry.getKey(), sqlx);
+
+            InsertStatement insert =new InsertStatement();
+            List<String> columns = new ArrayList<>();
+            List<Map<String, Object>> values = new ArrayList<>();
+
+            for (Map.Entry<String, PropertyDefinition> propertyEntry : objectDefinition.getProperties().entrySet()) {
+                PropertyDefinition property = propertyEntry.getValue();
+                columns.add(property.getColumnName());
+                Map<String, Object> row = new HashMap<>();
+                row.put(property.getColumnName(), property.getValue());
+                values.add(row);
+
+
+            }
+            insert.setInsertColumns(columns);
+//            sql.setInsertValues(values);
+            String sqlQuery = insert.generateSQL();
+
+            builderResult.getSqlMap().put(entry.getKey(), insert);
         });
         return builderResult;
     }
