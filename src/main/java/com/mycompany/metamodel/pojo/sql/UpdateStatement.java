@@ -11,6 +11,7 @@ public class UpdateStatement extends SQLStatement {
     private String tableName;
     private Map<String, Object> setValues;
     private List<String> whereConditions;
+    private String whereClause;
 
 
     // Constructor, getters, and setters
@@ -29,6 +30,9 @@ public class UpdateStatement extends SQLStatement {
         if (whereConditions!=null && !whereConditions.isEmpty()) {
             sqlBuilder.append("\nWHERE ")
                     .append(String.join(" AND ", whereConditions));
+        }else if(whereClause!=null){
+            sqlBuilder.append("\nWHERE \n")
+                    .append(whereClause);
         }
         return sqlBuilder.toString();
     }

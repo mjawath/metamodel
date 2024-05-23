@@ -14,7 +14,7 @@ class UpdateStatementTest {
         UpdateStatement us= new UpdateStatement();
         us.setTableName("customers");
         us.setSetValues(Map.of("id", 1, "name", "John"));
-        us.setWhereConditions(Arrays.asList("id = 1"));
+        us.setWhereClause("id='1'");
         String update = us.generateSQL();
         assertEquals("UPDATE customers\nSET name = John, id = 1", update);
 

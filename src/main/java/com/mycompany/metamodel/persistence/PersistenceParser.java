@@ -22,19 +22,16 @@ public class PersistenceParser {
 
 
     public ObjectDefinition parseAnObject(String entityName, Map<String, Object> objectMap) {
-        ObjectDefinition metamodelPersistenceObject = new ObjectDefinition();
-        metamodelPersistenceObject.setEntityName(entityName);
+        ObjectDefinition found = new ObjectDefinition();
+        found.setEntityName(entityName);
 
         ObjectDefinition originalMetaObjectDef = domainModel.getObjectDefinition(entityName);
         if (originalMetaObjectDef == null) {
             throw new IllegalArgumentException("Object definition not found for entity: " + entityName);
         }
-        metamodelPersistenceObject.setTableName(originalMetaObjectDef.getTableName()); // Set table name based on entity type
+        found.setTableName(originalMetaObjectDef.getTableName()); // Set table name based on entity type
         Map<String, PropertyDefinition> propertyDefinitions = new LinkedHashMap<>();
-//        Object o = objectMap.get(entityName);
-//        if (!(o instanceof Map)){
-//            return null;
-//        }
+        Map<String, Object> aObj = new HashMap<>();
         setIdColumn(objectMap, originalMetaObjectDef, propertyDefinitions);
         for (Map.Entry<String, Object> entry : objectMap.entrySet()) {
             String fieldName = entry.getKey();
@@ -43,9 +40,11 @@ public class PersistenceParser {
             propertyDefinition = propertyDefinition.clone();
             propertyDefinition.setValue(fieldValue);
             propertyDefinitions.put(fieldName, propertyDefinition);
+            aObj.put(fieldName, fieldValue);
         }
         ObjectDefinition definition = originalMetaObjectDef.clone();
         definition.setProperties(propertyDefinitions);
+//        definition.setValueBag(aObj);
         return definition;
     }
 

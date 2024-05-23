@@ -24,6 +24,7 @@ public class SQLBuilder implements PersistenceBuilder {
             ObjectDefinition objectDefinition = entry.getValue();
 
             InsertStatement insert =new InsertStatement();
+            insert.setTableName(objectDefinition.getTableName());
             List<String> columns = new ArrayList<>();
             List<Map<String, Object>> values = new ArrayList<>();
 

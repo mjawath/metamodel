@@ -2,8 +2,7 @@ package com.mycompany.metamodel.pojo;
 
 import lombok.Data;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -18,6 +17,7 @@ public class ObjectDefinition extends Node{
     private String operation;
     private Map<String, PropertyDefinition> properties;
     private String[] required;
+    private List<Map<String,Object>> valueBag = new LinkedList<>();
 
     private Object value;
 
