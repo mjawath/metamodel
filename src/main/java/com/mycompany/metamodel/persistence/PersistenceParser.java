@@ -8,17 +8,36 @@ import org.springframework.stereotype.Component;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class PersistenceParser {
 
     private DomainModel domainModel = DomainModel.getInstance();
+
+    public Map parse(Map<String, Map<String, Object>> objectMap) {
+        Map<String, Object> entryMsp = new HashMap<>();
+
+        for (Map.Entry<String, Map<String, Object>> entry : objectMap.entrySet()) {
+            ObjectDefinition foundObj = domainModel.getObjectDefinition(entry.getKey());
+            if (foundObj == null) {
+                return null;
+            } else if (entry.getValue() instanceof Map) {
+                //for each
+                Map<String, Object> objVal = entry.getValue();
+                entryMsp.put(entry.getKey(), objVal);
+                for (Map.Entry<String, Object> valueByAttr : objVal.entrySet()) {
+
+                }
+
+//                result.put(entry.getKey(), processAnEntry(entry));
+            }
+        }
+        return null;
+    }
 
 
     public ObjectDefinition parseAnObject(String entityName, Map<String, Object> objectMap) {
@@ -72,31 +91,11 @@ public class PersistenceParser {
         return parserResult;
     }
 
-    public static void main(String[] args) {
-        Map<String, Column> original = new HashMap<>();
-        original.put("foo", new Column());
-        original.put("bar", new Column());
 
-        Map<String, Columnx> copy = original.entrySet()
-                .stream()
-                .collect(Collectors.toMap(Map.Entry::getKey,
-                        e -> new Columnx(e.getValue().toString())));
-
-        System.out.println(original);
-        System.out.println(copy);
-    }
 
     private ObjectDefinition processAnEntry(Map.Entry<String, Object> entry) {
         return parseAnObject(entry.getKey(), (Map<String, Object>) entry.getValue());
     }
 
-    static class Column {
-        public Column() {}
-        public Column(Column c) {}
-    }
 
-    static class Columnx {
-        public Columnx() {}
-        public Columnx(String c) {}
-    }
 }

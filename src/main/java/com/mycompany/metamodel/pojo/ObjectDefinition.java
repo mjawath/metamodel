@@ -1,5 +1,6 @@
 package com.mycompany.metamodel.pojo;
 
+import claude.RelationshipDefinition;
 import lombok.Data;
 
 import java.util.*;
@@ -16,6 +17,8 @@ public class ObjectDefinition extends Node{
     private String tableName;
     private String operation;
     private Map<String, PropertyDefinition> properties;
+    private Map<String, RelationshipDefinition> relationships;
+
     private String[] required;
     private List<Map<String,Object>> valueBag = new LinkedList<>();
 

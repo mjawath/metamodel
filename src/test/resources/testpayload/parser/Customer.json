@@ -1,0 +1,30 @@
+{"customers":[
+  {
+    "name": "John",
+    "dob": "2000-01-01",
+    "contacts": [
+      {
+        "type": "phone",
+        "value": "1234567890"
+      },
+      {
+        "type": "email",
+        "value": "9wYhP@example.com"
+      }
+    ]
+  },
+  {
+    "name": "bge",
+    "dob": "2040-01-01",
+    "contacts": [
+      {
+        "type": "phone",
+        "value": "425523"
+      },
+      {
+        "type": "email",
+        "value": "9wYhP@example.com"
+      }
+    ]
+  }
+]}
