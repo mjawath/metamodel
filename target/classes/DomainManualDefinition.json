@@ -4,13 +4,13 @@
       "title": "Customer",
       "description": "An object representing a customer",
       "type": "object",
-      "class": "com.mycompany.metamodel.Customer",
+      "className": "com.mycompany.metamodel.testdomain.Customer",
       "tableName": "customer",
       "entityName": "customer",
       "operation": "create",
       "properties": {
         "id": {
-          "type": "integer",
+          "type": "string",
           "columnName": "id",
           "columnType": "integer",
           "primaryKey": true,

@@ -4,7 +4,6 @@ import com.mycompany.metamodel.DataSource;
 import com.mycompany.metamodel.MetamodelLoader;
 import com.mycompany.metamodel.pojo.DomainModel;
 
-import com.mycompany.metamodel.pojo.PersistenceResult;
 import com.mycompany.metamodel.testdomain.Customer;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -55,7 +54,7 @@ public class Main {
 //                .join(new JoinClause("LEFT", "orders", "customer.id = orders.customer_id"))
                 .criteria("name", "John Doe")
                 .build();
-         customers = rehydrator.rehydrate(executor.executeQuery( "customer",options),"customer");
+         customers = rehydrator.persistanceToData(executor.executeQuery( "customer",options), "customer");
         for (Customer customer : customers) {
             System.out.println(customer.getName() + ": " + customer.getEmail());
         }

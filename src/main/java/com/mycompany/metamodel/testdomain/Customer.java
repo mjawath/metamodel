@@ -4,7 +4,7 @@ import com.mycompany.metamodel.pojo.BaseEntity;
 import lombok.Data;
 
 @Data
-public class Customer extends BaseEntity<Long> {
+public class Customer extends BaseEntity<String> {
     private String name;
     private String email;
     // Other fields and methods specific to Customer entity

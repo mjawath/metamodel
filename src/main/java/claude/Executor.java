@@ -26,7 +26,7 @@ public class Executor {
     }
 
     public void persist(Object entity, String entityName) {
-        Map<String, Object> columnMap = rehydrator.rehydrate(entity, entityName);
+        Map<String, Object> columnMap = rehydrator.dataToPersistance(entity, entityName);
         String sql = sqlBuilder.buildInsertSQL(entityName, columnMap);
         ObjectDefinition objectDef = config.getObjectDefinition(entityName);
 
@@ -47,7 +47,7 @@ public class Executor {
     }
 
     public int update(Object entity, String entityName, String primaryKeyColumn) {
-        Map<String, Object> columnMap = rehydrator.rehydrate(entity, entityName);
+        Map<String, Object> columnMap = rehydrator.dataToPersistance(entity, entityName);
         String sql = sqlBuilder.buildUpdateSQL(entityName, columnMap, primaryKeyColumn);
         ObjectDefinition objectDef = config.getObjectDefinition(entityName);
 
@@ -119,7 +119,7 @@ public class Executor {
                 List<Map<String, Object>> results = new ArrayList<>();
                 while (rs.next()) {
                     Map<String, Object> row = resultSetToMap(rs);
-                    results.add(rehydrator.rehydrate(row, entityName));                }
+                    results.add(rehydrate(row, entityName));                }
                 return results;
             }
         } catch (SQLException e) {
