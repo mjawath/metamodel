@@ -3,9 +3,10 @@ package com.mycompany.metamodel.pojo;
 import claude.RelationshipDefinition;
 import lombok.Data;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Data
 public class ObjectDefinition extends Node{
@@ -50,5 +51,32 @@ public class ObjectDefinition extends Node{
             }
         }
         return clone;
+    }
+
+    //get primary key
+    public PropertyDefinition getPrimaryKey() {
+        return getProperties().values().stream()
+                .filter(PropertyDefinition::isPrimaryKey)
+                .findFirst()
+//                .map(PropertyDefinition::getName)
+//                .orElseThrow(() -> new IllegalStateException("No primary key defined for type: " + this.getEntityName()));
+                .orElse(null);
+    }
+
+    public List<String> getAllOwnProps() {
+        return getProperties().values().stream()
+                .filter(PropertyDefinition::isAttribute)
+                .map(PropertyDefinition::getName).toList();
+    }
+
+    public List<String> getColumns(List<String> attributes) {
+        if(attributes==null) return null;
+        return attributes.stream().map(attribute -> {
+            PropertyDefinition propertyDefinition = getProperties().get(attribute);
+            if(propertyDefinition==null || !propertyDefinition.isAttribute()){
+                return null;
+            }
+            return propertyDefinition.getColumnName();
+        }).toList();
     }
 }

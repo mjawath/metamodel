@@ -49,10 +49,10 @@ public class Main {
         // Query as before
         queryBuilder.where("email", "=", "johndoe@example.com");
 
-        SelectOptions options = new SelectOptions.Builder()
-                .columns("id", "name", "email")
+        SelectOptions options = SelectOptions.builder()
+                .columns(Arrays.asList("id", "name", "email"))
 //                .join(new JoinClause("LEFT", "orders", "customer.id = orders.customer_id"))
-                .criteria("name", "John Doe")
+                .criteria(Map.of("name", "John Doe"))
                 .build();
          customers = rehydrator.persistanceToData(executor.executeQuery( "customer",options), "customer");
         for (Customer customer : customers) {

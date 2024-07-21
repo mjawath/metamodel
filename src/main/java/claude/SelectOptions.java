@@ -1,39 +1,25 @@
 package claude;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.*;
 
 @Data
+@Builder
 public class SelectOptions {
+    @Builder.Default
     private List<String> columns = new ArrayList<>();
+    @Builder.Default
     private List<JoinClause> joins = new ArrayList<>();
+    @Builder.Default
     private Map<String, Object> criteria = new HashMap<>();
+    @Builder.Default
+    private Map<String, Object> params = new HashMap<>();
+    @Builder.Default
+    private List<WhereClause> whereClauses = new LinkedList<>();
 
-    // Getters and setters
 
-    public static class Builder {
-        private SelectOptions options = new SelectOptions();
-
-        public Builder columns(String... cols) {
-            options.columns.addAll(Arrays.asList(cols));
-            return this;
-        }
-
-        public Builder join(JoinClause join) {
-            options.joins.add(join);
-            return this;
-        }
-
-        public Builder criteria(String key, Object value) {
-            options.criteria.put(key, value);
-            return this;
-        }
-
-        public SelectOptions build() {
-            return options;
-        }
-    }
 }
 
  class JoinClause {

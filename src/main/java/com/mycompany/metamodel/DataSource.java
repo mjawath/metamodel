@@ -18,5 +18,9 @@ public class DataSource {
 
     private DataSource() {}
 
+    public DataSource getInstance(){
+        return this;
+    }
+
 
 }

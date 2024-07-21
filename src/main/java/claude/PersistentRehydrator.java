@@ -6,22 +6,44 @@ import com.mycompany.metamodel.pojo.ObjectDefinition;
 import com.mycompany.metamodel.pojo.PropertyDefinition;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PersistentRehydrator {
     private final ObjectMapper objectMapper;
-    private final DomainModel config;
+    private final DomainModel domainModel;
 
-    public PersistentRehydrator(DomainModel config) {
+    public PersistentRehydrator(DomainModel domainModel) {
         this.objectMapper = new ObjectMapper();
-        this.config = config;
+        this.domainModel = domainModel;
     }
 
-    public Map<String, Object> dataToPersistance(Object jsonCompatibleObject, String entityName) {
-        ObjectDefinition objectDef = config.getObjectDefinition(entityName);
+    public SelectOptions getOptionForFindAll(String entityName) {
+        List<String> columnnames = domainModel.getObjectDefinition(entityName)
+                .getProperties().values().stream()
+                .map(PropertyDefinition::getColumnName).toList();
+        return SelectOptions.builder().columns(columnnames).build();
+    }
+
+    public SelectOptions getOptionForFindAll(String entityName, String orderByColumn) {
+        return null;
+    }
+
+    public SelectOptions getOptionForFindById(String entityName, Object idValue) {
+        ObjectDefinition objectDefinition = domainModel.getObjectDefinition(entityName);
+        PropertyDefinition primaryKey = objectDefinition.getPrimaryKey();
+        Map params = new LinkedHashMap();
+        params.put("id",idValue);
+
+        return SelectOptions.builder()
+                .columns(objectDefinition.getAllOwnProps())//
+                .criteria(Map.of(primaryKey.getName(), "= :id"))
+                .params(params)
+                .build();
+    }
+
+    public Map<String, Object> dataToAttributeMap(Object jsonCompatibleObject, String entityName) {
+        ObjectDefinition objectDef = domainModel.getObjectDefinition(entityName);
 
         // Convert object to map
         Map<String, Object> objectMap = objectMapper.convertValue(jsonCompatibleObject, Map.class);
@@ -44,7 +66,7 @@ public class PersistentRehydrator {
     }
 
     public <T> List<T> persistanceToData(List<Map<String, Object>> resultMaps, String entityName, Class<T> projectionClass) {
-        ObjectDefinition objectDef = config.getObjectDefinition(entityName);
+        ObjectDefinition objectDef = domainModel.getObjectDefinition(entityName);
         List<T> results = new ArrayList<>();
 
         boolean useObjectMapper = shouldUseObjectMapper(objectDef);
@@ -77,7 +99,8 @@ public class PersistentRehydrator {
         return objectMapper.convertValue(convertedMap, clazz);
     }
 
-    private <T> T createInstanceWithReflection(Map<String, Object> convertedMap, ObjectDefinition objectDefinition,Class<T> clazz) {
+    private <T> T createInstanceWithReflection(Map<String, Object> convertedMap, ObjectDefinition objectDefinition,
+                                               Class<T> clazz) {
         try {
 
             T instance = clazz.getDeclaredConstructor().newInstance();

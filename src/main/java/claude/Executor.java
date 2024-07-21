@@ -16,19 +16,19 @@ public class Executor {
     private final DataSource dataSource;
     private final PersistentRehydrator rehydrator;
     private final SQLBuilder sqlBuilder;
-    private final DomainModel config;
+    private final DomainModel domainModel;
 
-    public Executor(DataSource dataSource, DomainModel config) {
+    public Executor(DataSource dataSource, DomainModel domainModel) {
         this.dataSource = dataSource;
-        this.rehydrator = new PersistentRehydrator(config);
-        this.sqlBuilder = new SQLBuilder(config);
-        this.config = config;
+        this.rehydrator = new PersistentRehydrator(domainModel);
+        this.sqlBuilder = new SQLBuilder(domainModel);
+        this.domainModel = domainModel;
     }
 
     public void persist(Object entity, String entityName) {
-        Map<String, Object> columnMap = rehydrator.dataToPersistance(entity, entityName);
+        Map<String, Object> columnMap = rehydrator.dataToAttributeMap(entity, entityName);
         String sql = sqlBuilder.buildInsertSQL(entityName, columnMap);
-        ObjectDefinition objectDef = config.getObjectDefinition(entityName);
+        ObjectDefinition objectDef = domainModel.getObjectDefinition(entityName);
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -47,9 +47,9 @@ public class Executor {
     }
 
     public int update(Object entity, String entityName, String primaryKeyColumn) {
-        Map<String, Object> columnMap = rehydrator.dataToPersistance(entity, entityName);
+        Map<String, Object> columnMap = rehydrator.dataToAttributeMap(entity, entityName);
         String sql = sqlBuilder.buildUpdateSQL(entityName, columnMap, primaryKeyColumn);
-        ObjectDefinition objectDef = config.getObjectDefinition(entityName);
+        ObjectDefinition objectDef = domainModel.getObjectDefinition(entityName);
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -127,6 +127,32 @@ public class Executor {
         }
     }
 
+    public List<Map<String, Object>> executeQueryx(String entityName, SQLStatement sqlStatement) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sqlStatement.getSql())) {
+
+            setParameters(stmt, sqlStatement.getParameters());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<Map<String, Object>> results = new ArrayList<>();
+                while (rs.next()) {
+                    Map<String, Object> row = resultSetToMap(rs);
+                    results.add(row);
+                }
+                return results;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error executing query", e);
+        }
+    }
+
+    private void setParameters(PreparedStatement stmt, Map<String, Object> parameters) throws SQLException {
+        int index = 1;
+        for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+            stmt.setString(index++, (String) entry.getValue());
+        }
+    }
+
    private Map<String, Object> resultSetToMap(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
         int columnCount = metaData.getColumnCount();
@@ -143,7 +169,7 @@ public class Executor {
 
 
     public Map<String, Object> rehydrate(Map<String, Object> data, String entityName) {
-        ObjectDefinition objectDef = config.getObjectDefinition(entityName);
+        ObjectDefinition objectDef = domainModel.getObjectDefinition(entityName);
         Map<String, Object> result = new HashMap<>();
 
         for (Map.Entry<String, Object> entry : data.entrySet()) {

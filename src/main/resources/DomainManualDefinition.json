@@ -10,7 +10,53 @@
       "operation": "create",
       "properties": {
         "id": {
+          "name":"id",
           "type": "string",
+          "columnName": "id",
+          "columnType": "integer",
+          "primaryKey": true,
+          "required": true,
+          "autoIncrement": true,
+          "columnSize": 10
+        },
+        "name": {
+          "name":"name",
+          "type": "string",
+          "required": true,
+          "columnName": "name",
+          "columnType": "string"
+        },
+        "email": {
+          "name":"email",
+          "type": "string",
+          "format": "email",
+          "required": true,
+          "columnName": "email",
+          "columnType": "string"
+        },
+        "contacts": {
+          "name":"contacts",
+          "type": "array",
+          "items": {
+            "ref": "#/definitions/contact"
+          }
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "user": {
+      "title": "User",
+      "description": "An object representing a user",
+      "type": "object",
+      "class": "com.mycompany.metamodel.User",
+      "tableName": "user_detail",
+      "entityName": "user",
+      "operation": "create",
+      "properties": {
+        "id": {
+          "type": "integer",
           "columnName": "id",
           "columnType": "integer",
           "primaryKey": true,
@@ -30,17 +76,8 @@
           "required": true,
           "columnName": "email",
           "columnType": "string"
-        },
-        "contacts": {
-          "type": "array",
-          "items": {
-            "ref": "#/definitions/contact"
-          }
         }
-      },
-      "required": [
-        "name"
-      ]
+      }
     }
   }
 }
